@@ -6,12 +6,12 @@ from torch import nn
 
 class VAE(nn.Module):
 
-    def __init__(self, input_dim, hidden_dim, latent_dim, max_len, vocab_size):
+    def __init__(self, input_dim: int, max_len: int, features: int):
         super(VAE, self).__init__()
-        self.vocab_size = vocab_size
+        self.vocab_size = features
 
-        self.encoder = Encoder(input_dim, hidden_dim, latent_dim)
-        self.decoder = Decoder(hidden_dim, latent_dim, vocab_size, max_len)
+        self.encoder = Encoder(input_dim)
+        self.decoder = Decoder(features, max_len)
 
     def encode(self, x):
         return self.encoder(x)

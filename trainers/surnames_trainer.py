@@ -1,6 +1,6 @@
 from configs.app_config import CREATORS_FOLDER_PATH
 from configs.training_config import *
-from utils.files_helper import read_unique_names, update_max_len
+from utils.files_helper import *
 from utils.embeddings import embed_name, adjust_creation
 from vae.dataset import NamesDataset
 from vae.assembly import VAE
@@ -14,24 +14,23 @@ from torch.utils.data import DataLoader
 class SurnamesTrainer:
 
     def __init__(self):
-        self.names = read_unique_names('surnames').tolist()
-
-        # Use embedded names for dataset.
-        embedded_names = [embed_name(name) for name in self.names]
-        self.max_len = max(len(name) for name in embedded_names)
-        update_max_len({"surnames": self.max_len})
-
-        self.dataset = NamesDataset(embedded_names, self.max_len)
+        self.names = read_unique_names('surnames')
         self.vae_path = os.path.join(CREATORS_FOLDER_PATH, 'surnames.pth')
 
     def train(self):
-        dataloader = DataLoader(self.dataset, batch_size=BATCH_SIZE, shuffle=True)
+        # Use embedded names for dataset.
+        embedded_names = [embed_name(name) for name in self.names]
+        max_len = max(len(name) for name in embedded_names)
+        update_max_len({"surnames": max_len})
+
+        dataset = NamesDataset(embedded_names, max_len)
+        save_dataset('surnames', dataset)
+
+        dataloader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True)
         vae = VAE(
-            input_dim=self.max_len,
-            hidden_dim=HIDDEN_DIM,
-            latent_dim=LATENT_DIM,
-            max_len=self.max_len,
-            vocab_size=len(self.dataset.encoder.classes_),
+            input_dim=max_len,
+            max_len=max_len,
+            features=len(dataset.encoder.classes_),
         )
 
         try:
@@ -63,18 +62,19 @@ class SurnamesTrainer:
                 optimizer.step()
 
             if epoch % DISPLAY_FREQ == 0:
-                print(f'Epoch {epoch} Loss: {epoch_loss / len(self.dataset)}')
+                print(f'Epoch {epoch} Loss: {epoch_loss / len(dataset)}')
                 epoch_loss -= epoch_loss
 
         torch.save(vae.state_dict(), self.vae_path)
 
     def evaluate(self, num_names: int, temperature: float):
+        max_len = read_max_len('surnames')
+        dataset = read_dataset('surnames')
+
         vae = VAE(
-            input_dim=self.max_len,
-            hidden_dim=HIDDEN_DIM,
-            latent_dim=LATENT_DIM,
-            max_len=self.max_len,
-            vocab_size=len(self.dataset.encoder.classes_),
+            input_dim=max_len,
+            max_len=max_len,
+            features=len(dataset.encoder.classes_),
         )
 
         try:  # If pre-trained VAE is found.
@@ -87,10 +87,10 @@ class SurnamesTrainer:
         creations = []
         while len(creations) < num_names:
             creation = create_name(
-                vae, LATENT_DIM, self.max_len, self.dataset.encoder, temperature
+                vae, max_len, dataset.encoder, temperature
             )
             creation = adjust_creation(creation)
-            if creation not in self.names + creations:  # Ensure distinct new names.
+            if creation not in creations + self.names:  # Ensure distinct creation.
                 creations.append(creation)
 
         return ', '.join(creations)
@@ -99,4 +99,4 @@ class SurnamesTrainer:
 if __name__ == '__main__':
     trainer = SurnamesTrainer()
     # trainer.train()
-    print(trainer.evaluate(5, 0.05))
+    print(trainer.evaluate(20, 0.05))

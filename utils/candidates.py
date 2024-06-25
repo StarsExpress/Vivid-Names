@@ -2,7 +2,7 @@ from utils.files_helper import read_unique_names
 import numpy as np
 
 
-surnames = read_unique_names('surnames').tolist()
+surnames = read_unique_names('surnames')
 
 
 def select_surnames(size: int):

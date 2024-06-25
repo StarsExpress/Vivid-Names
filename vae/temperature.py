@@ -1,3 +1,4 @@
+from configs.training_config import LATENT_DIM
 from vae.assembly import VAE
 import torch
 from torch.nn import functional as f
@@ -10,16 +11,9 @@ def decode_logits(logits: torch.Tensor, temperature: float):
     return torch.multinomial(probs, num_samples=1)
 
 
-def create_name(
-        vae: VAE,
-        latent_dim: int,
-        max_len: int,
-        encoder: LabelEncoder,
-        temperature: float,
-):
-
+def create_name(vae: VAE, max_len: int, encoder: LabelEncoder, temperature: float):
     with torch.no_grad():
-        z = torch.randn(1, latent_dim)  # Sample from latent space.
+        z = torch.randn(1, LATENT_DIM)  # Sample from latent space.
         sample = vae.decode(z).view(-1, max_len, len(encoder.classes_))
 
         sampled_name = []

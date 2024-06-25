@@ -1,15 +1,16 @@
+from configs.training_config import HIDDEN_DIM, LATENT_DIM
 from torch import nn
 from torch.nn import functional as f
 
 
 class Decoder(nn.Module):
 
-    def __init__(self, hidden_dim, latent_dim, vocab_size, max_len):
+    def __init__(self, features: int, max_len: int):
         super(Decoder, self).__init__()
 
-        self.input_linear = nn.Linear(latent_dim, hidden_dim)
-        self.lstm = nn.LSTM(hidden_dim, hidden_dim, batch_first=True)
-        self.output_linear = nn.Linear(hidden_dim, vocab_size)
+        self.input_linear = nn.Linear(LATENT_DIM, HIDDEN_DIM)
+        self.lstm = nn.LSTM(HIDDEN_DIM, HIDDEN_DIM, batch_first=True)
+        self.output_linear = nn.Linear(HIDDEN_DIM, features)
         self.max_len = max_len
 
     def forward(self, z):
