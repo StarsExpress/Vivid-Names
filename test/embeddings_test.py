@@ -1,44 +1,23 @@
-from utils.embeddings import encode_seqs, decode_matrix, encode_name, characters_list
+from configs.names_config import EMBED_CHARS_DICT
 from utils.files_helper import read_unique_names
+from utils.embeddings import embed_name
 
 
-def test_embeddings(names_type: str):
-    """
-    Test functionality of embeddings.py in these steps:
-    1. Read unique names of a specified type and encode them into sequences.
-    2. Decode encoded sequences and check if decoded names match original names.
-    3. Also check shapes of encoded sequences and characters.
+start_char = EMBED_CHARS_DICT['start']
+end_char = EMBED_CHARS_DICT['end']
 
-    Args:
-        names_type (str): type of names to test. Can be 'surnames', 'male_forenames', or 'female_forenames'.
-    """
-    names_series = read_unique_names(names_type)
 
-    # Plus 1 indicates start_char.
-    steps = max(names_series.apply(lambda x: len(x))) + 1
-    matrices = names_series.apply(lambda x: encode_seqs(x, steps))
-
-    for original_name, encoded_matrix in zip(names_series, matrices):  # Check each encoding validity.
-        if original_name != decode_matrix(encoded_matrix):  # If wrong encoding is found.
-            print(f'Incorrect encoding for name {original_name}!')
-
-    # Make list of encoded matrices/vectors list to a matrices/vectors list.
-    seqs_list = sum(names_series.apply(lambda x: encode_name(x, steps)).tolist(), [])
-    chars_list = sum(names_series.apply(lambda x: encode_name(x, steps, False)).tolist(), [])
-
-    for seqs, chars in zip(seqs_list, chars_list):  # Check shapes of encoded seqs and chars.
-        assert seqs.shape == (1, steps, len(characters_list)), chars.shape == (1, len(characters_list))
-
-    # len(seqs_list) = length of all names + total names count; n-length name gets n + 1 seqs.
-    assert len(seqs_list) == len(''.join(names_series.tolist())) + len(names_series)
+def test_embeddings(name_type: str):
+    names = read_unique_names(name_type).tolist()
+    embedded_names = [embed_name(name) for name in names]
+    for original_name, embedded_name in zip(names, embedded_names):
+        assert embedded_name[0] == start_char
+        assert embedded_name[-1] == end_char
+        assert len(embedded_name) == len(original_name) + 2
+        assert set(original_name).intersection({start_char, end_char}) == set()
 
 
 if __name__ == '__main__':
-    import time
-
-    start = time.time()
     test_embeddings('surnames')
-    test_embeddings('male_forenames')
     test_embeddings('female_forenames')
-    end = time.time()
-    print(f'\nTotal runtime: {str(round(end - start, 2))} seconds.')
+    test_embeddings('male_forenames')

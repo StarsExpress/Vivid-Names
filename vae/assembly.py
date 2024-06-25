@@ -4,10 +4,10 @@ import torch
 from torch import nn
 
 
-class Assembly(nn.Module):
+class VAE(nn.Module):
 
     def __init__(self, input_dim, hidden_dim, latent_dim, max_len, vocab_size):
-        super(Assembly, self).__init__()
+        super(VAE, self).__init__()
         self.vocab_size = vocab_size
 
         self.encoder = Encoder(input_dim, hidden_dim, latent_dim)

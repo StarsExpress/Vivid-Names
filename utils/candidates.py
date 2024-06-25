@@ -5,22 +5,6 @@ import numpy as np
 surnames = read_unique_names('surnames').tolist()
 
 
-def adjust_creation(creation: str):
-    """
-    Adjust created name by capitalizing name. If creation starts with Mc, capitalize 3rd letter.
-
-    Args:
-        creation (str): created name.
-
-    Returns:
-        str: adjusted name.
-    """
-    creation = creation.capitalize()
-    if creation[:2] == 'Mc':
-        creation = creation[:2] + creation[2:].capitalize()
-    return creation
-
-
 def select_surnames(size: int):
     """
     Select a number of surnames from surnames list via uniform probability.

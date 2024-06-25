@@ -1,9 +1,10 @@
-from configs.app_config import APP_BASE_PATH, DATA_FOLDER_PATH
+from configs.app_config import DATA_FOLDER_PATH
 import os
 import pandas as pd
+import json
 
 
-encoding_info_path = os.path.join(APP_BASE_PATH, 'data', 'encoding_info.json')
+max_len_path = os.path.join(DATA_FOLDER_PATH, 'max_len.json')
 
 
 def read_unique_names(name_type: str):
@@ -17,15 +18,34 @@ def read_unique_names(name_type: str):
     Returns:
         pd.Series: series of unique names.
     """
-    names_file_path = os.path.join(DATA_FOLDER_PATH, name_type)
-    names_df = pd.read_csv(names_file_path, sep='\t', header=None, names=['names'])
+    file_path = os.path.join(DATA_FOLDER_PATH, name_type)
+    names_df = pd.read_csv(file_path, sep='\t', header=None, names=['names'])
 
-    if names_df['names'].is_unique is False:
+    if names_df['names'].is_unique is False:  # Update file.
         names_df.drop_duplicates(inplace=True)
         names_df.reset_index(drop=True, inplace=True)
-        names_df.to_csv(names_file_path, header=False, index=False)
+        names_df.to_csv(file_path, header=False, index=False)
 
-    return names_df['names']  # Return series.
+    return names_df['names']
+
+
+def update_max_len(max_len: dict[str, int]):
+    file = open(max_len_path, "r")
+    max_len_dict = json.load(file)
+    file.close()
+
+    max_len_dict.update(max_len)
+
+    file = open(max_len_path, "w")
+    json.dump(max_len, file)
+    file.close()
+
+
+def read_max_len(name_type: str):
+    file = open(max_len_path, "r")
+    max_len_dict = json.load(file)
+    file.close()
+    return max_len_dict[name_type]
 
 
 def encode_names_list_to_csv(gender: str, names: list[str]):
