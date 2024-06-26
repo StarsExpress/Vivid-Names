@@ -4,7 +4,7 @@ from utils.files_helper import *
 from utils.embeddings import embed_name, adjust_creation
 from vae.dataset import NamesDataset
 from vae.assembly import VAE
-from vae.loss_function import loss_function
+from vae.loss_function import compute_loss
 from vae.temperature import create_name
 import os
 import torch
@@ -52,8 +52,8 @@ class SurnamesTrainer:
             for batch in dataloader:
                 optimizer.zero_grad()
 
-                reconstruction_batch, mu, log_var = vae(batch.float())
-                loss = loss_function(reconstruction_batch, batch, mu, log_var)
+                reconstructed_batch, mu, log_var = vae(batch.float())
+                loss = compute_loss(reconstructed_batch, batch, mu, log_var)
                 loss.backward()
 
                 if epoch % DISPLAY_FREQ == 0:

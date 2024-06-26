@@ -8,12 +8,12 @@ class VAE(nn.Module):
 
     def __init__(self, input_dim: int, max_len: int, features: int):
         super(VAE, self).__init__()
-        self.vocab_size = features
+        self.features = features
 
         self.encoder = Encoder(input_dim)
         self.decoder = Decoder(features, max_len)
 
-    def encode(self, x):
+    def encode(self, x: torch.Tensor):
         return self.encoder(x)
 
     @staticmethod
@@ -22,10 +22,10 @@ class VAE(nn.Module):
         epsilon = torch.randn_like(std)
         return mu + epsilon * std
 
-    def decode(self, z):
+    def decode(self, z: torch.Tensor):
         return self.decoder(z)
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor):
         mu, log_var = self.encode(x.view(-1, x.size(1)))
         z = self.reparameterize(mu, log_var)
         return self.decode(z), mu, log_var

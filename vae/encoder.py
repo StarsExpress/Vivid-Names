@@ -1,4 +1,5 @@
 from configs.training_config import HIDDEN_DIM, LATENT_DIM
+import torch
 from torch import nn
 from torch.nn import functional as f
 
@@ -12,6 +13,6 @@ class Encoder(nn.Module):
         self.mu_linear = nn.Linear(HIDDEN_DIM, LATENT_DIM)
         self.output_linear = nn.Linear(HIDDEN_DIM, LATENT_DIM)
 
-    def forward(self, x):
-        h1 = f.relu(self.input_linear(x))
-        return self.mu_linear(h1), self.output_linear(h1)
+    def forward(self, x: torch.tensor):
+        hidden_output = f.relu(self.input_linear(x))
+        return self.mu_linear(hidden_output), self.output_linear(hidden_output)

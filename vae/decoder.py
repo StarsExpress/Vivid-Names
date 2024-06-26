@@ -1,4 +1,5 @@
 from configs.training_config import HIDDEN_DIM, LATENT_DIM
+import torch
 from torch import nn
 from torch.nn import functional as f
 
@@ -13,8 +14,9 @@ class Decoder(nn.Module):
         self.output_linear = nn.Linear(HIDDEN_DIM, features)
         self.max_len = max_len
 
-    def forward(self, z):
-        h3 = f.relu(self.input_linear(z))
-        h3 = h3.unsqueeze(1).repeat(1, self.max_len, 1)  # Repeat for sequence generation.
-        lstm_out, _ = self.lstm(h3)
+    def forward(self, z: torch.tensor):
+        hidden_output = f.relu(self.input_linear(z))
+        # Repeat for sequence generation.
+        hidden_output = hidden_output.unsqueeze(1).repeat(1, self.max_len, 1)
+        lstm_out, _ = self.lstm(hidden_output)
         return self.output_linear(lstm_out)
