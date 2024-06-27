@@ -16,7 +16,7 @@ class Decoder(nn.Module):
         self.output_layer = nn.Linear(HIDDEN_DIM, features)
 
     def forward(self, z: torch.tensor):
-        hidden_output = f.relu(self.input_layer(z))
+        hidden_output = f.gelu(self.input_layer(z))
         # Repeat for sequence generation.
         hidden_output = hidden_output.unsqueeze(1).repeat(1, self.max_len, 1)
         lstm_output, _ = self.lstm_layer(hidden_output)

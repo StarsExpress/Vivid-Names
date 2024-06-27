@@ -17,15 +17,15 @@ class VAE(nn.Module):
         return self.encoder(x)
 
     @staticmethod
-    def reparameterize(mean, log_var):
-        std = torch.exp(0.5 * log_var)
+    def reparameterize(latent_mean, latent_log_var):
+        std = torch.exp(0.5 * latent_log_var)
         epsilon = torch.randn_like(std)
-        return mean + epsilon * std
+        return latent_mean + epsilon * std
 
     def decode(self, z: torch.Tensor):
         return self.decoder(z)
 
     def forward(self, x: torch.Tensor):
-        mu, log_var = self.encode(x.view(-1, x.size(1)))
-        z = self.reparameterize(mu, log_var)
-        return self.decode(z), mu, log_var
+        latent_mean, latent_log_var = self.encode(x.view(-1, x.size(1)))
+        z = self.reparameterize(latent_mean, latent_log_var)
+        return self.decode(z), latent_mean, latent_log_var

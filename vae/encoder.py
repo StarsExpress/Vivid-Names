@@ -14,5 +14,5 @@ class Encoder(nn.Module):
         self.log_var_layer = nn.Linear(HIDDEN_DIM, LATENT_DIM)
 
     def forward(self, x: torch.tensor):
-        hidden_output = f.relu(self.input_layer(x))
+        hidden_output = f.selu(self.input_layer(x))
         return self.mean_layer(hidden_output), self.log_var_layer(hidden_output)

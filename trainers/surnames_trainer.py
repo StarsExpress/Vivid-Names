@@ -4,7 +4,7 @@ from utils.files_helper import *
 from utils.embeddings import embed_name, adjust_creation
 from vae.dataset import NamesDataset
 from vae.assembly import VAE
-from vae.loss_function import compute_loss
+from vae.loss import compute_loss
 from vae.temperature import create_name
 import os
 import torch
@@ -89,7 +89,7 @@ class SurnamesTrainer:
         creations = []
         while len(creations) < num_names:
             creation = create_name(
-                vae, max_len, dataset.encoder, temperature
+                vae, dataset.encoder, temperature
             )
             creation = adjust_creation(creation)
             if creation not in creations + self.names:  # Ensure distinct creation.
@@ -101,4 +101,4 @@ class SurnamesTrainer:
 if __name__ == '__main__':
     trainer = SurnamesTrainer()
     # trainer.train()
-    print(trainer.evaluate(20, 0.05))
+    print(trainer.evaluate(20, 0.25))
