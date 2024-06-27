@@ -9,10 +9,10 @@ class Encoder(nn.Module):
     def __init__(self, input_dim: int):
         super(Encoder, self).__init__()
 
-        self.input_linear = nn.Linear(input_dim, HIDDEN_DIM)
-        self.mu_linear = nn.Linear(HIDDEN_DIM, LATENT_DIM)
-        self.output_linear = nn.Linear(HIDDEN_DIM, LATENT_DIM)
+        self.input_layer = nn.Linear(input_dim, HIDDEN_DIM)
+        self.mean_layer = nn.Linear(HIDDEN_DIM, LATENT_DIM)
+        self.log_var_layer = nn.Linear(HIDDEN_DIM, LATENT_DIM)
 
     def forward(self, x: torch.tensor):
-        hidden_output = f.relu(self.input_linear(x))
-        return self.mu_linear(hidden_output), self.output_linear(hidden_output)
+        hidden_output = f.relu(self.input_layer(x))
+        return self.mean_layer(hidden_output), self.log_var_layer(hidden_output)

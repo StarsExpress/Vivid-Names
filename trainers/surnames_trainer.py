@@ -52,8 +52,10 @@ class SurnamesTrainer:
             for batch in dataloader:
                 optimizer.zero_grad()
 
-                reconstructed_batch, mu, log_var = vae(batch.float())
-                loss = compute_loss(reconstructed_batch, batch, mu, log_var)
+                reconstructed_batch, latent_mean, latent_log_var = vae(batch.float())
+                loss = compute_loss(
+                    reconstructed_batch, batch, latent_mean, latent_log_var
+                )
                 loss.backward()
 
                 if epoch % DISPLAY_FREQ == 0:

@@ -17,10 +17,10 @@ class VAE(nn.Module):
         return self.encoder(x)
 
     @staticmethod
-    def reparameterize(mu, log_var):
+    def reparameterize(mean, log_var):
         std = torch.exp(0.5 * log_var)
         epsilon = torch.randn_like(std)
-        return mu + epsilon * std
+        return mean + epsilon * std
 
     def decode(self, z: torch.Tensor):
         return self.decoder(z)
