@@ -2,8 +2,19 @@
 
 # Latent space settings.
 HIDDEN_DIM = 100
-LATENT_DIM = 20
-BETA = 1.5  # Regularization loss weight.
+LATENT_DIM = {
+    "surnames": 20,
+    "female_forenames": 80,  # Forenames are more entangled.
+    "male_forenames": 80,
+}
+
+
+# Regularization loss settings.
+VAE_BETA = {
+    "surnames": 1.5,
+    "female_forenames": 1.5,
+    "male_forenames": 0.8,
+}
 
 
 # Optimizer settings.
@@ -12,8 +23,8 @@ WEIGHT_DECAY = 0.001
 BETAS = (0.5, 0.9)
 
 
-# Structure settings.
-DEVICE = 'cpu'
+# Epoch settings.
+DEVICE = "cpu"
 BATCH_SIZE = 2
-EPOCHS = 200
+EPOCHS = 100
 DISPLAY_FREQ = 10  # Epoch frequency of loss display.

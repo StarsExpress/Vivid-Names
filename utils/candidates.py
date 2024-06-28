@@ -7,7 +7,7 @@ surnames = read_unique_names('surnames')
 
 def select_surnames(size: int):
     """
-    Select a number of surnames from surnames list via uniform probability.
+    For remix usage, select surnames via uniform probability.
 
     Args:
         size (int): number of surnames to select.
@@ -15,4 +15,4 @@ def select_surnames(size: int):
     Returns:
         list: list of selected surnames.
     """
-    return np.random.choice(surnames, size=size)  # Return entire list for remix preference.
+    return np.random.choice(surnames, size=size)

@@ -11,14 +11,14 @@ def decode_logits(logits: torch.Tensor, temperature: float):
     return torch.multinomial(probs, num_samples=1).item()  # Tensor to integer.
 
 
-def create_name(vae: VAE, encoder: LabelEncoder, temperature: float):
+def create_name(vae: VAE, encoder: LabelEncoder, temperature: float, names_type: str):
     with torch.no_grad():
-        z = torch.randn(1, LATENT_DIM)  # Sample from latent space.
+        sample = torch.randn(1, LATENT_DIM[names_type])  # Sample from latent space.
         # Squeeze away any singleton dimension.
-        sample = vae.decode(z).squeeze()  # Shape: (1, max_len, features).
+        decoded_sample = vae.decode(sample).squeeze()  # Shape: (1, max_len, features).
 
         char_indices = []
-        for char_logits in sample:
+        for char_logits in decoded_sample:
             char_indices.append(decode_logits(char_logits, temperature))
 
         created_chars = []

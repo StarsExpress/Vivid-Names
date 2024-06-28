@@ -39,7 +39,7 @@ def update_max_len(max_len: dict[str, int]):
     max_len_dict.update(max_len)
 
     with open(max_len_path, "w") as file:
-        json.dump(max_len, file)
+        json.dump(max_len_dict, file)
 
 
 def read_max_len(name_type: str):

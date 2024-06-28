@@ -6,12 +6,12 @@ from torch import nn
 
 class VAE(nn.Module):
 
-    def __init__(self, input_dim: int, max_len: int, features: int):
+    def __init__(self, input_dim: int, max_len: int, features: int, names_type: str):
         super(VAE, self).__init__()
         self.features = features
 
-        self.encoder = Encoder(input_dim)
-        self.decoder = Decoder(features, max_len)
+        self.encoder = Encoder(input_dim, names_type)
+        self.decoder = Decoder(features, max_len, names_type)
 
     def encode(self, x: torch.Tensor):
         return self.encoder(x)

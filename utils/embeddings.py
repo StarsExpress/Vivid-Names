@@ -20,7 +20,9 @@ def embed_name(name: str):
 
 def adjust_creation(creation: str):
     """
-    Remove any embedded start_char & end_char. Capitalize 1st letter.
+    Steps:
+    1. Remove any embedded start_char & end_char.
+    2. Capitalize 1st letter. If 1st two chars are Mc, also capitalize 3rd char.
 
     Args:
         creation (str): created name.
@@ -28,5 +30,8 @@ def adjust_creation(creation: str):
     Returns:
         str: adjusted name.
     """
-    creation = creation.replace(start_char, '').replace(end_char, '')
-    return creation.capitalize()
+    creation = creation.replace(start_char, '').replace(end_char, '').capitalize()
+
+    if creation[:2] == 'Mc':
+        creation = creation[:2] + creation[2:].capitalize()
+    return creation

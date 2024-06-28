@@ -6,12 +6,12 @@ from torch.nn import functional as f
 
 class Decoder(nn.Module):
 
-    def __init__(self, features: int, max_len: int):
+    def __init__(self, features: int, max_len: int, names_type: str):
         super(Decoder, self).__init__()
 
         self.max_len = max_len
 
-        self.input_layer = nn.Linear(LATENT_DIM, HIDDEN_DIM)
+        self.input_layer = nn.Linear(LATENT_DIM[names_type], HIDDEN_DIM)
         self.lstm_layer = nn.LSTM(HIDDEN_DIM, HIDDEN_DIM, batch_first=True)
         self.output_layer = nn.Linear(HIDDEN_DIM, features)
 

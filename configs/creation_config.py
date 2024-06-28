@@ -1,4 +1,4 @@
 """All creation configurations."""
 
 # Temperature settings.
-TEMPERATURE_RANGE = {'floor': 0.01, 'ceiling': 0.25}
+TEMPERATURE_RANGE = {"floor": 0.1, "ceiling": 0.2}
