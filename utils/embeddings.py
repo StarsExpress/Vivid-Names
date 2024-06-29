@@ -1,8 +1,7 @@
 from configs.names_config import EMBED_CHARS_DICT
 
 
-start_char = EMBED_CHARS_DICT['start']
-end_char = EMBED_CHARS_DICT['end']
+start_char, end_char = EMBED_CHARS_DICT['start'], EMBED_CHARS_DICT['end']
 
 
 def embed_name(name: str):
@@ -20,9 +19,9 @@ def embed_name(name: str):
 
 def adjust_creation(creation: str):
     """
-    Steps:
-    1. Remove any embedded start_char & end_char.
-    2. Capitalize 1st letter. If 1st two chars are Mc, also capitalize 3rd char.
+    Step 1: remove any embedded start_char & end_char.
+
+    Step 2: capitalize 1st letter. If 1st two chars are Mc, also capitalize 3rd char.
 
     Args:
         creation (str): created name.

@@ -1,4 +1,4 @@
-from configs.app_config import CREATORS_FOLDER_PATH
+from configs.paths_config import MODELS_FOLDER_PATH
 from configs.training_config import *
 from utils.files_helper import *
 from utils.embeddings import embed_name, adjust_creation
@@ -12,13 +12,29 @@ from torch.utils.data import DataLoader
 
 
 class SurnamesTrainer:
+    """
+    Train and evaluate VAE model on surnames.
+
+    Attributes:
+        names (list): list of unique surnames.
+        vae_path (str): path to VAE model.
+
+    Methods:
+        train(): train model on surnames.
+        evaluate(num_names: int, temperature: float): create a number of new names.
+    """
 
     def __init__(self):
+        """
+        Initialize with list of unique surnames and path to VAE model.
+        """
         self.names = read_unique_names("surnames")
-        self.vae_path = os.path.join(CREATORS_FOLDER_PATH, "surnames.pth")
+        self.vae_path = os.path.join(MODELS_FOLDER_PATH, "surnames.pth")
 
     def train(self):
-        # Use embedded names for dataset.
+        """
+        Train VAE on surnames. Use embedded names for dataset.
+        """
         embedded_names = [embed_name(name) for name in self.names]
         max_len = max(len(name) for name in embedded_names)
         update_max_len({"surnames": max_len})
@@ -71,6 +87,16 @@ class SurnamesTrainer:
         torch.save(vae.state_dict(), self.vae_path)
 
     def evaluate(self, num_names: int, temperature: float):
+        """
+        Create a number of new surnames for evaluation.
+
+        Args:
+            num_names (int): number of new names to create.
+            temperature (float): creativity level. Higher means more creative/randomness.
+
+        Returns:
+            str: string of all created names, separated by commas.
+        """
         max_len = read_max_len("surnames")
         dataset = read_dataset("surnames")
 

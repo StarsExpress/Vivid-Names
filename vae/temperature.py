@@ -6,12 +6,34 @@ from sklearn.preprocessing import LabelEncoder
 
 
 def decode_logits(logits: torch.Tensor, temperature: float):
+    """
+    Decode logits into probabilities and samples from them.
+
+    Args:
+        logits (torch.Tensor): logits to be decoded.
+        temperature (float): temperature to expand/shrink logits before entering softmax.
+
+    Returns:
+        int: sampled index.
+    """
     logits /= temperature
     probs = f.softmax(logits, dim=-1)
     return torch.multinomial(probs, num_samples=1).item()  # Tensor to integer.
 
 
 def create_name(vae: VAE, encoder: LabelEncoder, temperature: float, names_type: str):
+    """
+    Create a name using VAE and LabelEncoder.
+
+    Args:
+        vae (VAE): VAE for names creation.
+        encoder (LabelEncoder): LabelEncoder to use for decoding created name.
+        temperature (float): temperature to use for softmax.
+        names_type (str): type of names to be created. Can be: 'surnames', 'female_forenames', 'male_forenames'.
+
+    Returns:
+        str: created name.
+    """
     with torch.no_grad():
         sample = torch.randn(1, LATENT_DIM[names_type])  # Sample from latent space.
         # Squeeze away any singleton dimension.

@@ -4,15 +4,15 @@
 HIDDEN_DIM = 100
 LATENT_DIM = {
     "surnames": 20,
-    "female_forenames": 80,  # Forenames are more entangled.
-    "male_forenames": 80,
+    "female_forenames": 60,  # Forenames are more entangled.
+    "male_forenames": 60,
 }
 
 
 # Regularization loss settings.
 VAE_BETA = {
     "surnames": 1.5,
-    "female_forenames": 1.5,
+    "female_forenames": 0.8,
     "male_forenames": 0.8,
 }
 

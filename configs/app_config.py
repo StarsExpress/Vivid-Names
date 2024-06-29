@@ -1,12 +1,21 @@
 """All app configurations."""
 
-import os
+WEB_NAME = "VAE: <u>V</u>ivid N<u>a</u>m<u>e</u>s"
+ICON = "🎰"
+LAYOUT = "wide"
 
-# File settings.
-APP_BASE_PATH = os.path.dirname(
-    os.path.dirname(os.path.abspath(__file__))
-)
+LIGHT_THEME_CSS = """<style>
+                    :root {color - scheme: light;}
+                    </style>
+                    """
 
-DATA_FOLDER_PATH = os.path.join(APP_BASE_PATH, "data")
+NO_BORDERS_CSS = """<style>
+                        [data-testid="stForm"] {border: 0px}
+                    </style>
+                    """
 
-CREATORS_FOLDER_PATH = os.path.join(APP_BASE_PATH, "creators")
+HIDE_MENU_CSS = """<style>
+                        #MainMenu {visibility: hidden;}
+                        footer {visibility: hidden;}
+                     </style>
+                     """

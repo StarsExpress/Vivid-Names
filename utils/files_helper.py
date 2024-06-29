@@ -1,4 +1,4 @@
-from configs.app_config import DATA_FOLDER_PATH
+from configs.paths_config import DATA_FOLDER_PATH
 from vae.dataset import NamesDataset
 import os
 import pandas as pd
@@ -12,6 +12,7 @@ max_len_path = os.path.join(DATA_FOLDER_PATH, 'max_len.json')
 def read_unique_names(name_type: str):
     """
     Read unique names from a specified file.
+
     If names aren't unique, remove duplicates and save unique names back to the read file.
 
     Args:
@@ -33,6 +34,12 @@ def read_unique_names(name_type: str):
 
 
 def update_max_len(max_len: dict[str, int]):
+    """
+    Update max length of different types of names in max_len.json file.
+
+    Args:
+        max_len (dict[str, int]): dictionary where key is type of name and value is max length.
+    """
     with open(max_len_path, "r") as file:
         max_len_dict = json.load(file)
 
@@ -43,12 +50,28 @@ def update_max_len(max_len: dict[str, int]):
 
 
 def read_max_len(name_type: str):
+    """
+    Read max length of a specific type of name from max_len.json file.
+
+    Args:
+        name_type (str): type of name to read max length for.
+
+    Returns:
+        int: max length of specified type of name.
+    """
     with open(max_len_path, "r") as file:
         max_len_dict = json.load(file)
     return max_len_dict[name_type]
 
 
 def save_dataset(name_type: str, dataset: NamesDataset):
+    """
+    Save NamesDataset object to a pickle file.
+
+    Args:
+        name_type (str): type of names to corresponding dataset.
+        dataset (NamesDataset): dataset to be saved.
+    """
     file_path = os.path.join(
         DATA_FOLDER_PATH, f'{name_type}.pkl'
     )
@@ -57,6 +80,15 @@ def save_dataset(name_type: str, dataset: NamesDataset):
 
 
 def read_dataset(name_type: str):
+    """
+    Read NamesDataset object from a pickle file.
+
+    Args:
+        name_type (str): type of names to corresponding dataset.
+
+    Returns:
+        NamesDataset: dataset read from file.
+    """
     file_path = os.path.join(
         DATA_FOLDER_PATH, f'{name_type}.pkl'
     )

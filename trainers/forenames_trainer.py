@@ -1,4 +1,4 @@
-from configs.app_config import CREATORS_FOLDER_PATH
+from configs.paths_config import MODELS_FOLDER_PATH
 from configs.training_config import *
 from utils.files_helper import *
 from utils.embeddings import embed_name, adjust_creation
@@ -12,14 +12,30 @@ from torch.utils.data import DataLoader
 
 
 class ForenamesTrainer:
+    """
+    Train and evaluate VAE model on surnames.
+
+    Attributes:
+        names (list): list of unique surnames.
+        vae_path (str): path to VAE model.
+
+    Methods:
+        train(): train model on surnames.
+        evaluate(num_names: int, temperature: float): create a number of new names.
+    """
 
     def __init__(self, gender: str):
+        """
+        Initialize with list of unique surnames and path to VAE model.
+        """
         self.gender = gender
         self.names = read_unique_names(f"{gender}_forenames")
-        self.vae_path = os.path.join(CREATORS_FOLDER_PATH, f"{gender}_forenames.pth")
+        self.vae_path = os.path.join(MODELS_FOLDER_PATH, f"{gender}_forenames.pth")
 
     def train(self):
-        # Use embedded names for dataset.
+        """
+        Train VAE on surnames. Use embedded names for dataset.
+        """
         embedded_names = [embed_name(name) for name in self.names]
         max_len = max(len(name) for name in embedded_names)
         update_max_len({f"{self.gender}_forenames": max_len})
@@ -72,6 +88,16 @@ class ForenamesTrainer:
         torch.save(vae.state_dict(), self.vae_path)
 
     def evaluate(self, num_names: int, temperature: float):
+        """
+        Create a number of new surnames for evaluation.
+
+        Args:
+            num_names (int): number of new names to create.
+            temperature (float): creativity level. Higher means more creative/randomness.
+
+        Returns:
+            str: string of all created names, separated by commas.
+        """
         max_len = read_max_len(f"{self.gender}_forenames")
         dataset = read_dataset(f"{self.gender}_forenames")
 
@@ -100,6 +126,6 @@ class ForenamesTrainer:
 
 
 if __name__ == "__main__":
-    trainer = ForenamesTrainer("male")
+    trainer = ForenamesTrainer("female")
     # trainer.train()
-    print(trainer.evaluate(20, 0.2))
+    print(trainer.evaluate(20, 0.1))

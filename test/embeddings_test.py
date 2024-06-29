@@ -3,11 +3,21 @@ from utils.files_helper import read_unique_names
 from utils.embeddings import embed_name
 
 
-start_char = EMBED_CHARS_DICT['start']
-end_char = EMBED_CHARS_DICT['end']
+start_char, end_char = EMBED_CHARS_DICT['start'], EMBED_CHARS_DICT['end']
 
 
 def test_embeddings(name_type: str):
+    """
+    Test functionality of embeddings for a specific type of name.
+
+    This function reads unique names of specified type, embeds them, and checks if embeddings are correct.
+
+    Verification includes: start and end characters, length of embedded name,
+    and if original name doesn't contain start or end chars.
+
+    Args:
+        name_type (str): type of names to test embeddings. Can be 'surnames', 'female_forenames', or 'male_forenames'.
+    """
     original_names = read_unique_names(name_type)
     print(f'read_unique_names test passed.\n')
 
