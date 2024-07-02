@@ -1,4 +1,5 @@
-from configs.training_config import HIDDEN_DIM, LATENT_DIM
+from configs.decoder_config import DEC_DROPOUT
+from configs.training_config import LATENT_DIM
 import torch
 from torch import nn
 from torch.nn import functional as f
@@ -14,7 +15,6 @@ class Decoder(nn.Module):
         max_len (int): max length for a name. All names will be padded to this length.
         input_layer (nn.Linear): input layer of decoder.
         lstm_layer (nn.LSTM): LSTM layer of decoder.
-        output_layer (nn.Linear): output layer of decoder.
 
     Methods:
         forward(z: torch.Tensor): performs a forward pass through decoder.
@@ -31,11 +31,20 @@ class Decoder(nn.Module):
         """
         super(Decoder, self).__init__()
 
-        self.max_len = max_len
+        self.max_len, self.names_type = max_len, names_type
 
-        self.input_layer = nn.Linear(LATENT_DIM[names_type], HIDDEN_DIM)
-        self.lstm_layer = nn.LSTM(HIDDEN_DIM, HIDDEN_DIM, batch_first=True)
-        self.output_layer = nn.Linear(HIDDEN_DIM, features)
+        self.input_layer = nn.Linear(LATENT_DIM[names_type], features)
+
+        self.batch_norm = nn.BatchNorm1d(features)
+        self.dropout = nn.Dropout(p=DEC_DROPOUT[names_type])
+
+        self.lstm_layer = nn.LSTM(
+            features,
+            features,
+            batch_first=True,
+            dropout=DEC_DROPOUT[self.names_type],
+        )
+        self.output_layer = nn.Linear(features, features)
 
     def forward(self, z: torch.tensor):
         """
@@ -47,8 +56,12 @@ class Decoder(nn.Module):
         Returns:
             torch.Tensor: decoded data.
         """
-        hidden_output = f.gelu(self.input_layer(z))
+        hidden_output = self.input_layer(z)
+        hidden_output = f.gelu(self.batch_norm(hidden_output))
+        hidden_output = self.dropout(hidden_output)
+
         # Repeat for sequence generation.
         hidden_output = hidden_output.unsqueeze(1).repeat(1, self.max_len, 1)
+
         lstm_output, _ = self.lstm_layer(hidden_output)
         return self.output_layer(lstm_output)

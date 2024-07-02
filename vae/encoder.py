@@ -1,4 +1,5 @@
-from configs.training_config import HIDDEN_DIM, LATENT_DIM
+from configs.encoder_config import ENC_HIDDEN_DIM, ENC_DROPOUT
+from configs.training_config import LATENT_DIM
 import torch
 from torch import nn
 from torch.nn import functional as f
@@ -28,10 +29,14 @@ class Encoder(nn.Module):
             names_type (str): type of names to be created. Can be: 'surnames', 'female_forenames', 'male_forenames'.
         """
         super(Encoder, self).__init__()
+        self.names_type = names_type
 
-        self.input_layer = nn.Linear(input_dim, HIDDEN_DIM)
-        self.mean_layer = nn.Linear(HIDDEN_DIM, LATENT_DIM[names_type])
-        self.log_var_layer = nn.Linear(HIDDEN_DIM, LATENT_DIM[names_type])
+        self.input_layer = nn.Linear(input_dim, ENC_HIDDEN_DIM[names_type])
+        self.batch_norm = nn.BatchNorm1d(ENC_HIDDEN_DIM[names_type])
+        self.dropout = nn.Dropout(p=ENC_DROPOUT[names_type])
+
+        self.mean_layer = nn.Linear(ENC_HIDDEN_DIM[names_type], LATENT_DIM[names_type])
+        self.log_var_layer = nn.Linear(ENC_HIDDEN_DIM[names_type], LATENT_DIM[names_type])
 
     def forward(self, x: torch.tensor):
         """
@@ -43,5 +48,6 @@ class Encoder(nn.Module):
         Returns:
             tuple: mean and log variance of latent space.
         """
-        hidden_output = f.selu(self.input_layer(x))
+        hidden_output = self.batch_norm(self.input_layer(x))
+        hidden_output = self.dropout(f.relu6(hidden_output))
         return self.mean_layer(hidden_output), self.log_var_layer(hidden_output)

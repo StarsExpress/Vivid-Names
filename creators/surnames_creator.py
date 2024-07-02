@@ -24,7 +24,7 @@ class SurnamesCreator:
         Initialize with list of unique surnames and path to model.
         """
         self.names = read_unique_names("surnames")
-        self.vae_path = os.path.join(MODELS_FOLDER_PATH, "surnames.pth")
+        self.vae_path = os.path.join(MODELS_FOLDER_PATH, f"surnames.pth")
 
     def create(self, num_names: int, temperature: float):
         """

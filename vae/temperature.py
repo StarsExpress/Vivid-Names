@@ -21,6 +21,11 @@ def decode_logits(logits: torch.Tensor, temperature: float):
     return torch.multinomial(probs, num_samples=1).item()  # Tensor to integer.
 
 
+def interpolate(mu1, mu2):
+    ratios = torch.linspace(0, 1, 10)
+    return [(1 - r) * mu1 + r * mu2 for r in ratios]
+
+
 def create_name(vae: VAE, encoder: LabelEncoder, temperature: float, names_type: str):
     """
     Create a name using VAE and LabelEncoder.
@@ -43,8 +48,8 @@ def create_name(vae: VAE, encoder: LabelEncoder, temperature: float, names_type:
         for char_logits in decoded_sample:
             char_indices.append(decode_logits(char_logits, temperature))
 
-        created_chars = []
+        creation = ""
         for idx in char_indices:
             if idx != 0:  # Skip padded char. [0] gets decoded char.
-                created_chars.append(encoder.inverse_transform([idx])[0])
-        return ''.join(created_chars)
+                creation += encoder.inverse_transform([idx])[0]
+        return creation

@@ -29,7 +29,7 @@ class SurnamesTrainer:
         Initialize with list of unique surnames and path to VAE model.
         """
         self.names = read_unique_names("surnames")
-        self.vae_path = os.path.join(MODELS_FOLDER_PATH, "surnames.pth")
+        self.vae_path = os.path.join(MODELS_FOLDER_PATH, f"surnames.pth")
 
     def train(self):
         """
@@ -127,4 +127,10 @@ class SurnamesTrainer:
 if __name__ == "__main__":
     trainer = SurnamesTrainer()
     # trainer.train()
-    print(trainer.evaluate(20, 0.2))
+
+    num_creations, high_temperature, low_temperature = 20, 0.25, 0.1
+    print(f"\n{low_temperature} Temperature:")
+    print(trainer.evaluate(num_creations, low_temperature))
+
+    print(f"\n{high_temperature} Temperature:")
+    print(trainer.evaluate(num_creations, high_temperature))

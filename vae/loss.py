@@ -27,7 +27,7 @@ def compute_loss(
     Returns:
         torch.Tensor: computed loss.
     """
-    bce = f.cross_entropy(
+    cce = f.cross_entropy(
         reconstructed_x.view(-1, reconstructed_x.size(-1)),
         x.view(-1),
         reduction="sum",
@@ -35,4 +35,4 @@ def compute_loss(
     kld = -0.5 * torch.sum(
         1 + latent_log_var - latent_mean.pow(2) - latent_log_var.exp()
     )
-    return bce + VAE_BETA[names_type] * kld
+    return cce + VAE_BETA[names_type] * kld

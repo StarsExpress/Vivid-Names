@@ -1,3 +1,4 @@
+from configs.names_config import *
 import torch
 from torch.utils.data import Dataset
 from sklearn.preprocessing import LabelEncoder
@@ -32,14 +33,15 @@ class NamesDataset(Dataset):
         Initialize dataset with list of names and a max length.
 
         Args:
-            names (list): original list of names.
+            names (list): list of names before encoding and padding.
             max_len (int): max length for a name. All names will be padded to this length.
         """
         self.names = names
         self.max_len = max_len
 
+        all_chars = LOWER_CASE_LIST + UPPER_CASE_LIST + list(EMBED_CHARS_DICT.values())
         self.encoder = LabelEncoder()
-        self.encoder.fit(list("".join(names)))
+        self.encoder.fit(all_chars)
 
         self.encoded_names = [self.encode_name(name) for name in names]
 
@@ -57,7 +59,7 @@ class NamesDataset(Dataset):
         return np.pad(
             encoded_name,
             (0, self.max_len - len(encoded_name)),
-            'constant'
+            "constant"
         )
 
     def __len__(self):

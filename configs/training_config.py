@@ -1,19 +1,18 @@
 """All training configurations."""
 
 # Latent space settings.
-HIDDEN_DIM = 100
 LATENT_DIM = {
-    "surnames": 20,
-    "female_forenames": 60,  # Forenames are more entangled.
-    "male_forenames": 60,
+    "surnames": 25,
+    "female_forenames": 30,
+    "male_forenames": 30,
 }
 
 
 # Regularization loss settings.
 VAE_BETA = {
-    "surnames": 1.5,
-    "female_forenames": 0.8,
-    "male_forenames": 0.8,
+    "surnames": 2.0,
+    "female_forenames": 2.5,
+    "male_forenames": 2.0,
 }
 
 
@@ -24,7 +23,6 @@ BETAS = (0.5, 0.9)
 
 
 # Epoch settings.
-DEVICE = "cpu"
-BATCH_SIZE = 2
-EPOCHS = 100
+BATCH_SIZE = 10
+EPOCHS = 150
 DISPLAY_FREQ = 10  # Epoch frequency of loss display.
