@@ -33,7 +33,7 @@ MIN_NUM = 1
 CREATIVITY_SLIDER = "🎨 Creativity"
 CREATIVITY_DICT = {  # Temperature of VAE creation.
     "display_min": 0, "display_max": 10, "display_step": 1,
-    "real_min": 0.1, "real_max": 0.25,
+    "real_min": 0.01, "real_max": 0.1,
 }
 
 GENDER = "👫 Gender"

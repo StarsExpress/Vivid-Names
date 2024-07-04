@@ -31,23 +31,23 @@ class SurnamesTrainer:
         self.names = read_unique_names("surnames")
         self.vae_path = os.path.join(MODELS_FOLDER_PATH, f"surnames.pth")
 
-    def train(self):
+    def train(self, epochs: int):
         """
-        Train VAE on surnames. Use embedded names for dataset.
+        Train VAE on surnames given number of epochs. Use embedded names for dataset.
         """
         embedded_names = [embed_name(name) for name in self.names]
-        max_len = max(len(name) for name in embedded_names)
-        update_max_len({"surnames": max_len})
+        # Timesteps must be length of the longest name.
+        timesteps = max(len(name) for name in embedded_names)
+        update_timesteps({"surnames": timesteps})
 
-        dataset = NamesDataset(embedded_names, max_len)
+        dataset = NamesDataset(embedded_names, timesteps)
         save_dataset("surnames", dataset)
 
         dataloader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True)
         vae = VAE(
-            input_dim=max_len,
-            max_len=max_len,
+            timesteps=timesteps,
             features=len(dataset.encoder.classes_),
-            names_type="surnames",
+            name_type="surnames",
         )
 
         try:
@@ -63,9 +63,9 @@ class SurnamesTrainer:
             betas=BETAS,
         )
 
-        vae.train()
         epoch_loss = 0
-        for epoch in range(1, EPOCHS + 1):
+        for epoch in range(1, epochs + 1):
+            vae.train()
             for batch in dataloader:
                 optimizer.zero_grad()
 
@@ -97,14 +97,13 @@ class SurnamesTrainer:
         Returns:
             str: string of all created names, separated by commas.
         """
-        max_len = read_max_len("surnames")
+        timesteps = read_timesteps("surnames")
         dataset = read_dataset("surnames")
 
         vae = VAE(
-            input_dim=max_len,
-            max_len=max_len,
+            timesteps=timesteps,
             features=len(dataset.encoder.classes_),
-            names_type="surnames",
+            name_type="surnames",
         )
 
         try:  # If pre-trained VAE is found.
@@ -121,16 +120,14 @@ class SurnamesTrainer:
             if creation not in creations + self.names:  # Ensure distinct creation.
                 creations.append(creation)
 
+        print(f"\n{temperature} Temperature:")
         return ", ".join(creations)
 
 
 if __name__ == "__main__":
     trainer = SurnamesTrainer()
-    # trainer.train()
+    # trainer.train(200)
 
-    num_creations, high_temperature, low_temperature = 20, 0.25, 0.1
-    print(f"\n{low_temperature} Temperature:")
+    num_creations, low_temperature, high_temperature = 20, 0.01, 0.1
     print(trainer.evaluate(num_creations, low_temperature))
-
-    print(f"\n{high_temperature} Temperature:")
     print(trainer.evaluate(num_creations, high_temperature))

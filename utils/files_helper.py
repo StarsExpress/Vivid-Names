@@ -6,7 +6,7 @@ import json
 import pickle
 
 
-max_len_path = os.path.join(DATA_FOLDER_PATH, 'max_len.json')
+timesteps_path = os.path.join(DATA_FOLDER_PATH, f"timesteps.json")
 
 
 def read_unique_names(name_type: str):
@@ -33,35 +33,35 @@ def read_unique_names(name_type: str):
     return names_df['names'].tolist()
 
 
-def update_max_len(max_len: dict[str, int]):
+def update_timesteps(partial_dict: dict[str, int]):
     """
-    Update max length of different types of names in max_len.json file.
+    Update timesteps.json file with a partial dict carrying a specific name type's timesteps.
 
     Args:
-        max_len (dict[str, int]): dictionary where key is type of name and value is max length.
+        partial_dict (dict[str, int]): key is name type and value is timesteps.
     """
-    with open(max_len_path, "r") as file:
-        max_len_dict = json.load(file)
+    with open(timesteps_path, "r") as file:
+        timesteps_dict = json.load(file)
 
-    max_len_dict.update(max_len)
+    timesteps_dict.update(partial_dict)
 
-    with open(max_len_path, "w") as file:
-        json.dump(max_len_dict, file)
+    with open(timesteps_path, "w") as file:
+        json.dump(timesteps_dict, file)
 
 
-def read_max_len(name_type: str):
+def read_timesteps(name_type: str):
     """
-    Read max length of a specific type of name from max_len.json file.
+    Read timesteps of a specific name type from timesteps.json file.
 
     Args:
-        name_type (str): type of name to read max length for.
+        name_type (str): type of name to read timesteps for.
 
     Returns:
-        int: max length of specified type of name.
+        int: timesteps of specified type of name.
     """
-    with open(max_len_path, "r") as file:
-        max_len_dict = json.load(file)
-    return max_len_dict[name_type]
+    with open(timesteps_path, "r") as file:
+        timesteps_dict = json.load(file)
+    return timesteps_dict[name_type]
 
 
 def save_dataset(name_type: str, dataset: NamesDataset):

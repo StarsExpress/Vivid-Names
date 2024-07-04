@@ -10,7 +10,7 @@ def decode_logits(logits: torch.Tensor, temperature: float):
     Decode logits into probabilities and samples from them.
 
     Args:
-        logits (torch.Tensor): logits to be decoded.
+        logits (torch.Tensor): logits to be decoded, shape (features).
         temperature (float): temperature to expand/shrink logits before entering softmax.
 
     Returns:
@@ -21,28 +21,30 @@ def decode_logits(logits: torch.Tensor, temperature: float):
     return torch.multinomial(probs, num_samples=1).item()  # Tensor to integer.
 
 
-def interpolate(mu1, mu2):
-    ratios = torch.linspace(0, 1, 10)
-    return [(1 - r) * mu1 + r * mu2 for r in ratios]
-
-
 def create_name(vae: VAE, encoder: LabelEncoder, temperature: float, names_type: str):
     """
-    Create a name using VAE and LabelEncoder.
+    Creates a name using a trained VAE model and a label encoder.
+
+    This function takes a random sample from latent space, decodes it into a sequence of logits
+    representing character probabilities. Characters sampling is based on probabilities adjusted by temperature.
+
+    Temperature controls randomness of sampling process, with lower values leading to less random outputs.
+
+    Finally, a label encoder converts sampled character indices back into character strings.
 
     Args:
-        vae (VAE): VAE for names creation.
-        encoder (LabelEncoder): LabelEncoder to use for decoding created name.
-        temperature (float): temperature to use for softmax.
-        names_type (str): type of names to be created. Can be: 'surnames', 'female_forenames', 'male_forenames'.
+        vae (VAE): VAE model used for creating names.
+        encoder (LabelEncoder): label encoder used for indices conversion back into characters.
+        temperature (float): used for controlling randomness of character sampling.
+        names_type (str): type of names to create, which determines latent space to sample from.
 
     Returns:
         str: created name.
     """
     with torch.no_grad():
         sample = torch.randn(1, LATENT_DIM[names_type])  # Sample from latent space.
-        # Squeeze away any singleton dimension.
-        decoded_sample = vae.decode(sample).squeeze()  # Shape: (1, max_len, features).
+        # Detach gradients. Squeeze away any singleton dimension.
+        decoded_sample = vae.decode(sample).detach().squeeze()  # Shape: (1, max_len, features).
 
         char_indices = []
         for char_logits in decoded_sample:

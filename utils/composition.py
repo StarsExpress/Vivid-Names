@@ -41,7 +41,6 @@ def make_creations(num_names: int, temperature: float, gender: str = "female", t
     Returns:
         tuple: list of created names, total time and average time to create names.
     """
-
     start = time.time()
     surnames, forenames = [], []
 

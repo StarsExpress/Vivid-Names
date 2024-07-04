@@ -37,14 +37,13 @@ class SurnamesCreator:
         Returns:
             list: list of all created names.
         """
-        max_len = read_max_len("surnames")
+        timesteps = read_timesteps("surnames")
         dataset = read_dataset("surnames")
 
         vae = VAE(
-            input_dim=max_len,
-            max_len=max_len,
+            timesteps=timesteps,
             features=len(dataset.encoder.classes_),
-            names_type="surnames",
+            name_type="surnames",
         )
 
         try:  # If pre-trained VAE is found.

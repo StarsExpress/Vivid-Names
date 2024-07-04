@@ -4,32 +4,33 @@ from torch.nn import functional as f
 
 
 def compute_loss(
-    reconstructed_x: torch.Tensor,
-    x: torch.Tensor,
+    reconstructed_input: torch.Tensor,
+    original_input: torch.Tensor,
     latent_mean: torch.Tensor,
     latent_log_var: torch.Tensor,
     names_type: str,
 ):
     """
-    Compute loss for VAE. Loss is composed of two parts:
+    Compute loss for Beta VAE. Loss is composed of two parts:
 
     1. Reconstruction loss: Binary Cross Entropy between reconstructed input and original input.
 
-    2. Regularization loss: Kullback-Leibler Divergence between learned latent distribution and prior distribution.
+    2. Regularization loss: Kullback-Leibler Divergence between learned latent and prior distribution.
+       Regularization loss will be weighted by Beta parameter.
 
     Args:
-        reconstructed_x (torch.Tensor): reconstructed input.
-        x (torch.Tensor): original input.
-        latent_mean (torch.Tensor): mean of the learned latent distribution.
-        latent_log_var (torch.Tensor): log variance of the learned latent distribution.
+        reconstructed_input (torch.Tensor): reconstructed input, shape (batch_size, timesteps, features).
+        original_input (torch.Tensor): original input, shape (batch_size, timesteps).
+        latent_mean (torch.Tensor): mean of latent distribution, shape (batch_size, latent_dimensions).
+        latent_log_var (torch.Tensor): log variance of latent distribution, shape (batch_size, latent_dimensions).
         names_type (str): type of names to be created. Can be: 'surnames', 'female_forenames', 'male_forenames'.
 
     Returns:
         torch.Tensor: computed loss.
     """
     cce = f.cross_entropy(
-        reconstructed_x.view(-1, reconstructed_x.size(-1)),
-        x.view(-1),
+        reconstructed_input.reshape(-1, reconstructed_input.size(-1)),
+        original_input.reshape(-1),
         reduction="sum",
     )
     kld = -0.5 * torch.sum(

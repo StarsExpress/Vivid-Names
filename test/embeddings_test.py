@@ -3,7 +3,7 @@ from utils.files_helper import read_unique_names
 from utils.embeddings import embed_name
 
 
-start_char, end_char = EMBED_CHARS_DICT['start'], EMBED_CHARS_DICT['end']
+start_char, end_char = EMBED_CHARS_DICT["start"], EMBED_CHARS_DICT["end"]
 
 
 def test_embeddings(name_type: str):

@@ -42,14 +42,13 @@ class ForenamesCreator:
         Returns:
             list: list of all created names.
         """
-        max_len = read_max_len(f"{self.gender}_forenames")
+        timesteps = read_timesteps(f"{self.gender}_forenames")
         dataset = read_dataset(f"{self.gender}_forenames")
 
         vae = VAE(
-            input_dim=max_len,
-            max_len=max_len,
+            timesteps=timesteps,
             features=len(dataset.encoder.classes_),
-            names_type=f"{self.gender}_forenames",
+            name_type=f"{self.gender}_forenames",
         )
 
         try:  # If pre-trained VAE is found.

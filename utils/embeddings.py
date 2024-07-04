@@ -1,7 +1,7 @@
 from configs.names_config import EMBED_CHARS_DICT
 
 
-start_char, end_char = EMBED_CHARS_DICT['start'], EMBED_CHARS_DICT['end']
+start_char, end_char = EMBED_CHARS_DICT["start"], EMBED_CHARS_DICT["end"]
 
 
 def embed_name(name: str):

@@ -3,11 +3,9 @@ Nicholas
 Martin
 Sam
 Clark
-Brett
 Andy
 Dave
 Steve
-Matt
 Paul
 Joe
 Ben
@@ -18,7 +16,6 @@ Travis
 Richard
 Donovan
 Lucas
-Nick
 Trent
 Justin
 George
@@ -34,7 +31,6 @@ Tyler
 Josh
 Brandon
 Fred
-Jordan
 Darius
 James
 Sydney
@@ -46,11 +42,9 @@ Morgan
 Andrew
 Tristan
 Rashawn
-Christian
 Kingsley
 Blake
 Owen
-Troy
 Stephen
 Terry
 Myles
@@ -63,5 +57,4 @@ Nathaniel
 Keeanu
 Byron
 Anthony
-Xavier
 Kevin
