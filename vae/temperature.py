@@ -1,8 +1,8 @@
-from configs.training_config import LATENT_DIM
-from vae.assembly import VAE
 import torch
 from torch.nn import functional as f
 from sklearn.preprocessing import LabelEncoder
+from configs.training_config import LATENT_DIM
+from vae.assembly import VAE
 
 
 def decode_logits(logits: torch.Tensor, temperature: float):

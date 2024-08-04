@@ -1,6 +1,6 @@
 """All app configurations."""
 
-WEB_NAME = "VAE: <u>V</u>ivid N<u>a</u>m<u>e</u>s"
+WEB_NAME = "VAE: Vivid Names"
 ICON = "🎰"
 LAYOUT = "wide"
 

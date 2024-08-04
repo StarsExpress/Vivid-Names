@@ -1,8 +1,8 @@
-from configs.encoder_config import *
-from configs.training_config import LATENT_DIM
 import torch
 from torch import nn
 from torch.nn import functional as f
+from configs.encoder_config import *
+from configs.training_config import LATENT_DIM
 
 
 class Encoder(nn.Module):

@@ -1,9 +1,9 @@
-from configs.paths_config import DATA_FOLDER_PATH
-from vae.dataset import NamesDataset
 import os
 import pandas as pd
 import json
 import pickle
+from configs.paths_config import DATA_FOLDER_PATH
+from vae.dataset import NamesDataset
 
 
 timesteps_path = os.path.join(DATA_FOLDER_PATH, f"timesteps.json")

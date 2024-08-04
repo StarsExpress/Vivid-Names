@@ -1,14 +1,14 @@
+import os
+import torch
+from torch.utils.data import DataLoader
 from configs.paths_config import MODELS_FOLDER_PATH
 from configs.training_config import *
-from utils.files_helper import *
+from utils.files_helper import read_unique_names, save_dataset, read_dataset, read_timesteps, update_timesteps
 from utils.embeddings import embed_name, adjust_creation
 from vae.dataset import NamesDataset
 from vae.assembly import VAE
 from vae.loss import compute_loss
 from vae.temperature import create_name
-import os
-import torch
-from torch.utils.data import DataLoader
 
 
 class SurnamesTrainer:

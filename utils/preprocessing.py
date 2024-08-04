@@ -1,7 +1,7 @@
-from configs.paths_config import DATA_FOLDER_PATH
-from configs.pages_config import CREATIVITY_DICT
 import os
 import base64
+from configs.paths_config import DATA_FOLDER_PATH
+from configs.pages_config import CREATIVITY_DICT
 
 
 def process_image_body():

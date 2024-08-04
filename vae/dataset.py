@@ -1,8 +1,8 @@
-from configs.names_config import *
 import torch
 from torch.utils.data import Dataset
 from sklearn.preprocessing import LabelEncoder
 import numpy as np
+from configs.names_config import *
 
 
 class NamesDataset(Dataset):

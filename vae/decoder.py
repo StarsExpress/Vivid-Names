@@ -1,8 +1,8 @@
-from configs.decoder_config import *
-from configs.training_config import LATENT_DIM
 import torch
 from torch import nn
 from torch.nn import functional as f
+from configs.decoder_config import *
+from configs.training_config import LATENT_DIM
 
 
 class Decoder(nn.Module):

@@ -1,10 +1,10 @@
+import os
+import torch
 from configs.paths_config import MODELS_FOLDER_PATH
-from utils.files_helper import *
+from utils.files_helper import read_unique_names, read_timesteps, read_dataset
 from utils.embeddings import adjust_creation
 from vae.assembly import VAE
 from vae.temperature import create_name
-import os
-import torch
 
 
 class ForenamesCreator:

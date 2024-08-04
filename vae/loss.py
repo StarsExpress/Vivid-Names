@@ -1,6 +1,6 @@
-from configs.training_config import VAE_BETA
 import torch
 from torch.nn import functional as f
+from configs.training_config import VAE_BETA
 
 
 def compute_loss(

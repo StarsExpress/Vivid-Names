@@ -1,8 +1,8 @@
+import time
+import numpy as np
 from creators.surnames_creator import SurnamesCreator
 from creators.forenames_creator import ForenamesCreator
 from utils.files_helper import read_unique_names
-import numpy as np
-import time
 
 
 surnames_list = read_unique_names("surnames")

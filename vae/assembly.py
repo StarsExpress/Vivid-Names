@@ -1,7 +1,7 @@
-from vae.encoder import Encoder
-from vae.decoder import Decoder
 import torch
 from torch import nn
+from vae.encoder import Encoder
+from vae.decoder import Decoder
 
 
 class VAE(nn.Module):
@@ -53,7 +53,7 @@ class VAE(nn.Module):
             input_tensor (torch.Tensor): shape (batch_size, timesteps).
 
         Returns:
-            Tuple[torch.Tensor, torch.Tensor]: contains latent mean and log variance tensors.
+            tuple[torch.Tensor, torch.Tensor]: contains latent mean and log variance tensors.
 
             Both tensors have shape (batch_size, latent_dimensions).
         """
@@ -97,7 +97,7 @@ class VAE(nn.Module):
             x (torch.Tensor): shape (batch_size, timesteps).
 
         Returns:
-            Tuple[torch.Tensor, torch.Tensor, torch.Tensor]: contains decoded output, latent mean and log variance.
+            tuple[torch.Tensor, torch.Tensor, torch.Tensor]: contains decoded output, latent mean and log variance.
         """
         latent_mean, latent_log_var = self.encode(x.view(-1, x.size(1)))
         z = self.reparameterize(latent_mean, latent_log_var)
